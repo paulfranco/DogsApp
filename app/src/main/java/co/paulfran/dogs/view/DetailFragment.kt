@@ -28,13 +28,9 @@ class DetailFragment : Fragment() {
         // arguments?.let means that if arguments is not null then do this:
         arguments?.let {
             dogUuid = DetailFragmentArgs.fromBundle(it).dogUuid
-            textView.text = dogUuid.toString()
+
         }
 
-        buttonList.setOnClickListener {
-            val action = DetailFragmentDirections.actionListFragment()
-            Navigation.findNavController(it).navigate(action)
-        }
     }
 
 
