@@ -35,7 +35,7 @@
                 android:layout_marginTop="8dp"
                 android:layout_marginEnd="8dp"
                 android:layout_marginBottom="8dp"
-                android:text="An Error occurred while loading the area"
+                android:text="@string/loading_error"
                 app:layout_constraintBottom_toBottomOf="@+id/dogsList"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
