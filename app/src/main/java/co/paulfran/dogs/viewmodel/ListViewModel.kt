@@ -3,22 +3,51 @@ package co.paulfran.dogs.viewmodel
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import co.paulfran.dogs.model.DogBreed
+import co.paulfran.dogs.model.DogsApiService
+import io.reactivex.android.schedulers.AndroidSchedulers
+import io.reactivex.disposables.CompositeDisposable
+import io.reactivex.observers.DisposableSingleObserver
+import io.reactivex.schedulers.Schedulers
 
 class ListViewModel: ViewModel() {
+
+    private val dogsService = DogsApiService()
+    private val disposible = CompositeDisposable()
 
     val dogs = MutableLiveData<List<DogBreed>>()
     val dogsLoadError = MutableLiveData<Boolean>()
     val loading = MutableLiveData<Boolean>()
 
     fun refresh() {
-        val dog1 = DogBreed("1", "Corgi", "15 Years", "lalala", "fucking", "high", "jdksjdksjdkskdjksjk")
-        val dog2 = DogBreed("2", "ira", "15 Years", "lalala", "fucking", "high", "jdksjdksjdkskdjksjk")
-        val dog3 = DogBreed("3", "rocky", "15 Years", "lalala", "fucking", "high", "jdksjdksjdkskdjksjk")
-        val dogList = arrayListOf<DogBreed>(dog1, dog2, dog3)
+        fetchFromRemote()
+    }
 
-        dogs.value = dogList
-        dogsLoadError.value = false
-        loading.value = false
+    private fun fetchFromRemote() {
+        loading.value = true
+        disposible.add(
+                dogsService.getDogs()
+                        .subscribeOn(Schedulers.newThread())
+                        .observeOn(AndroidSchedulers.mainThread())
+                        .subscribeWith(object: DisposableSingleObserver<List<DogBreed>>() {
+                            override fun onSuccess(dogList: List<DogBreed>) {
+                                dogs.value = dogList
+                                dogsLoadError.value = false
+                                loading.value = false
+                            }
+
+                            override fun onError(e: Throwable) {
+                                dogsLoadError.value = true
+                                loading.value = false
+                                e.printStackTrace()
+                            }
+
+                        })
+        )
+    }
+
+    override fun onCleared() {
+        super.onCleared()
+        disposible.clear()
     }
 
 }
