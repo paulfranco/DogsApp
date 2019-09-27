@@ -4,11 +4,22 @@
         <variable
             name="dog"
             type="co.paulfran.dogs.model.DogBreed"/>
+        <variable
+            name="listener"
+            type="co.paulfran.dogs.view.DogClickListener" />
     </data>
     <LinearLayout
         android:orientation="horizontal"
         android:layout_width="match_parent"
+        android:onClick="@{listener::onDogClicked}"
         android:layout_height="125dp">
+
+        <TextView
+            android:id="@+id/dogId"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:visibility="gone"
+            android:text="@{String.valueOf(dog.uuid)}"/>
 
         <ImageView
             android:id="@+id/imageView"
